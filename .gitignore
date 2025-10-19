@@ -1,0 +1,23 @@
+# Node modules (auto-generated dependencies)
+node_modules/
+
+# Build and output files
+dist/
+build/
+public/output.css
+
+# Environment files (if you use them later)
+.env
+.env.local
+
+# Logs
+*.log
+
+# System / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Tailwind cache
+*.cache
