@@ -20,14 +20,21 @@
   </div>
   <div class="navbar-end gap-2">
     <?php if (!isset($_SESSION["first_name"])): ?>
-    <a href="login.php" class="btn btn-primary btn-sm">
-      Login
-    </a>
+      <a href="login.php" class="btn btn-primary btn-sm">
+        Login
+      </a>
     <?php endif; ?>
     <?php if (isset($_SESSION['first_name'])): ?>
-    <span>
-      <?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?>
-    </span>
+      <span class="flex items-center gap-3">
+        <div class="avatar">
+          <div class="w-12 rounded-full">
+            <img src="<?php echo "../uploads_users/" . $_SESSION['user_img'] ?>" />
+          </div>
+        </div>
+        <span>
+          <?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?>
+        </span>
+      </span>
     <?php endif; ?>
     <button class="btn btn-ghost btn-circle btn-sm">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

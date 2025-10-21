@@ -2,3 +2,7 @@
 @plugin "daisyui" {
   themes: forest;
 }
+
+.card-body {
+  background-color: #161212 !important;
+}
