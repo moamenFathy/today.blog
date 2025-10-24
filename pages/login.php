@@ -34,7 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['first_name'] = $user['first_name'];
         $_SESSION['last_name'] = $user['last_name'];
         $_SESSION['email'] = $user['email'];
-        $_SESSION['user_img'] = $user['user_img'];
+        if (!$user['user_img']) {
+          $_SESSION['user_img'] = "default.jpg";
+        } else {
+          $_SESSION['user_img'] = $user['user_img'];
+        }
+        // Use primary key column from users table
+        $_SESSION['user_id'] = $user['id'];
         header("Location: index.php");
         exit();
       } else {

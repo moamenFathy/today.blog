@@ -135,7 +135,7 @@
                 <label class="label">
                   <span class="label-text">Pick profile image:</span>
                 </label>
-                <input type="file" name="user_img" class="file-input mx-auto" required />
+                <input type="file" name="user_img" class="file-input mx-auto" />
               </fieldset>
 
               <!-- Password -->
