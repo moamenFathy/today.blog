@@ -1,5 +1,6 @@
 <?php
 require "../includes/connection.php";
+require_once "../includes/config.php";
 include "../includes/queries.php";
 
 $conn = connectDb();
@@ -34,7 +35,7 @@ if ($isLoggedIn) {
   // Ensure table may exist; safe select even if missing
   $check = @mysqli_query($conn, "SHOW TABLES LIKE 'post_reactions'");
   if ($check && mysqli_num_rows($check) > 0) {
-    $rres = mysqli_query($conn, "SELECT reaction FROM post_reactions WHERE post_id=".(int)$post['id']." AND user_id=".$uid." LIMIT 1");
+    $rres = mysqli_query($conn, "SELECT reaction FROM post_reactions WHERE post_id=" . (int)$post['id'] . " AND user_id=" . $uid . " LIMIT 1");
     if ($rres && mysqli_num_rows($rres)) {
       $row = mysqli_fetch_assoc($rres);
       $currentReaction = $row['reaction'];
@@ -56,15 +57,15 @@ if ($isLoggedIn) {
 
 <body>
   <?php include "../includes/navbar.php"; ?>
-  
+
   <!-- Article Container -->
   <article class="container mx-auto max-w-4xl px-4 py-8">
-    
+
     <!-- Title -->
     <h1 class="text-4xl md:text-5xl font-bold text-center mb-6 leading-tight">
       <?php echo htmlspecialchars($post['title']) ?>
     </h1>
-    
+
     <!-- Post Meta Information -->
     <div class="flex items-center justify-center gap-4 mb-8 text-base-content/70">
       <span class="flex items-center gap-2">
@@ -78,22 +79,22 @@ if ($isLoggedIn) {
         <?php echo $post['likes'] ?> likes
       </span>
     </div>
-    
+
     <!-- Featured Image -->
-      <figure class="mb-8 rounded-2xl overflow-hidden shadow-xl">
-        <img 
-        class="w-full h-auto object-cover" 
+    <figure class="mb-8 rounded-2xl overflow-hidden shadow-xl">
+      <img
+        class="w-full h-auto object-cover"
         src="<?php echo "../uploads_posts/" . $post['img'] ?>"
         alt="<?php echo htmlspecialchars($post['title']) ?>">
-      </figure>
-    
+    </figure>
+
     <!-- Content -->
     <div class="prose prose-lg max-w-none">
       <div class="text-base-content leading-relaxed text-lg break-words whitespace-normal">
         <?php echo nl2br($post['content']) ?>
       </div>
     </div>
-    
+
     <!-- Like / Dislike Section (per-user, server-enforced) -->
     <div class="card bg-base-200 shadow-lg mt-8">
       <div class="card-body">
@@ -108,7 +109,7 @@ if ($isLoggedIn) {
               <span id="like-count" class="text-xl font-bold"><?php echo (int)($post['likes'] ?? 0); ?></span>
             </div>
           </button>
-          
+
           <!-- Dislike button -->
           <?php $dislikeActive = ($currentReaction === 'dislike'); ?>
           <button id="dislike-btn" type="button" class="btn <?php echo $dislikeActive ? 'btn-error' : 'btn-outline btn-error'; ?> btn-lg gap-3" aria-label="Dislike this post">
@@ -120,23 +121,23 @@ if ($isLoggedIn) {
           </button>
         </div>
         <?php if (!$isLoggedIn): ?>
-          <p class="text-center text-sm opacity-70 mt-3">Please <a class="link link-primary" href="login.php">login</a> to like or dislike.</p>
+          <p class="text-center text-sm opacity-70 mt-3">Please <a class="link link-primary" href="<?= asset('pages/login.php') ?>">login</a> to like or dislike.</p>
         <?php else: ?>
           <p class="text-center text-sm opacity-70 mt-3">One reaction per account. Switching moves your vote.</p>
         <?php endif; ?>
       </div>
     </div>
-    
+
     <!-- Author Section -->
     <div class="divider my-8"></div>
     <div class="card bg-base-200 shadow-lg mt-8">
       <div class="card-body">
         <h3 class="card-title text-2xl mb-4">About the Author</h3>
         <div class="flex items-center gap-4">
-          <?php 
-            $authorImg = (!empty($post['user_img']) && file_exists("../uploads_users/" . $post['user_img'])) 
-              ? ("../uploads_users/" . $post['user_img']) 
-              : "../uploads_users/default.jpg";
+          <?php
+          $authorImg = (!empty($post['user_img']) && file_exists("../uploads_users/" . $post['user_img']))
+            ? ("../uploads_users/" . $post['user_img'])
+            : "../uploads_users/default.jpg";
           ?>
           <div class="avatar">
             <div class="w-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -150,7 +151,7 @@ if ($isLoggedIn) {
         </div>
       </div>
     </div>
-    
+
     <!-- Back Button -->
     <div class="mt-8 text-center">
       <a href="index.php" class="btn btn-primary btn-wide">
@@ -160,12 +161,12 @@ if ($isLoggedIn) {
         Back to Home
       </a>
     </div>
-    
+
   </article>
-  
+
   <?php include "../includes/footer.php"; ?>
   <script>
-    (function(){
+    (function() {
       const postId = <?php echo (int)$post['id']; ?>;
       const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
       const likeBtn = document.getElementById('like-btn');
@@ -173,11 +174,11 @@ if ($isLoggedIn) {
       const likeCountEl = document.getElementById('like-count');
       const dislikeCountEl = document.getElementById('dislike-count');
 
-      function setActive(btn, active, base){
+      function setActive(btn, active, base) {
         // base: 'success' or 'error'
         const activeClass = base === 'success' ? 'btn-success' : 'btn-error';
         const outlineClass = 'btn-outline';
-        btn.classList.remove('btn-success','btn-error','btn-outline');
+        btn.classList.remove('btn-success', 'btn-error', 'btn-outline');
         if (active) {
           btn.classList.add(activeClass);
         } else {
@@ -185,7 +186,7 @@ if ($isLoggedIn) {
         }
       }
 
-      function handleResponse(data){
+      function handleResponse(data) {
         likeCountEl.textContent = data.likes;
         dislikeCountEl.textContent = data.dislikes;
         const r = data.currentUserReaction;
@@ -193,20 +194,22 @@ if ($isLoggedIn) {
         setActive(dislikeBtn, r === 'dislike', 'error');
       }
 
-      async function react(action){
+      async function react(action) {
         if (!isLoggedIn) {
-          window.location.href = 'login.php';
+          window.location.href = '<?= asset('pages/login.php') ?>';
           return;
         }
         try {
-          const res = await fetch('../includes/handle_reaction.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:`post_id=${encodeURIComponent(postId)}&action=${encodeURIComponent(action)}`
+          const res = await fetch('../includes/handle_reaction.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `post_id=${encodeURIComponent(postId)}&action=${encodeURIComponent(action)}`
           });
           const data = await res.json();
           if (res.status === 401) {
-            window.location.href = 'login.php';
+            window.location.href = '<?= asset('pages/login.php') ?>';
             return;
           }
           if (data && data.success) {
@@ -217,8 +220,8 @@ if ($isLoggedIn) {
         }
       }
 
-      likeBtn?.addEventListener('click', ()=>react('like'));
-      dislikeBtn?.addEventListener('click', ()=>react('dislike'));
+      likeBtn?.addEventListener('click', () => react('like'));
+      dislikeBtn?.addEventListener('click', () => react('dislike'));
 
       if (!isLoggedIn) {
         likeBtn.disabled = true;

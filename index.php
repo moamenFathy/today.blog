@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Today.Blog</title>
-  <link rel="stylesheet" href="../public/output.css?v=<?php echo filemtime('../public/output.css'); ?>">
+  <link rel="stylesheet" href="./public/output.css?v=<?php echo filemtime('./public/output.css'); ?>">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     integrity="sha512-..."
@@ -15,9 +15,10 @@
 
 <body>
   <?php
-  include "../includes/navbar.php";
-  include "../includes/connection.php";
-  include "../includes/queries.php";
+  include "./includes/config.php";
+  include "./includes/navbar.php";
+  include "./includes/connection.php";
+  include "./includes/queries.php";
 
   $conn = connectDb();
 
@@ -65,9 +66,9 @@
 
           <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <?php if (isset($_SESSION['first_name'])): ?>
-              <a href="./create_post.php" class="btn btn-primary btn-wide">Start writing</a>
+              <a href="<?= asset('pages/create_post.php') ?>" class="btn btn-primary btn-wide">Start writing</a>
             <?php else: ?>
-              <a href="./register.php" class="btn btn-primary btn-wide">Get started</a>
+              <a href="<?= asset('pages/register.php') ?>" class="btn btn-primary btn-wide">Get started</a>
             <?php endif; ?>
             <a href="#discover" class="btn btn-ghost">Explore posts</a>
           </div>
@@ -88,15 +89,15 @@
       <div class="card bg-base-100 w-80 lg:w-96 shadow-sm">
         <figure>
           <img
-            src="<?php echo "../uploads_posts/" . $post['img'] ?>"
+            src="<?= asset('uploads_posts/' . $post['img']) ?>"
             alt="Shoes" />
         </figure>
         <div class="card-body flex justify-between rounded-b-xl">
           <div class="flex gap-4">
             <?php
-            $authorImg = (!empty($post['user_img']) && file_exists("../uploads_users/" . $post['user_img']))
-              ? ("../uploads_users/" . $post['user_img'])
-              : "../uploads_users/default.jpg";
+            $authorImg = (!empty($post['user_img']) && file_exists("./uploads_users/" . $post['user_img']))
+              ? ("./uploads_users/" . $post['user_img'])
+              : "./uploads_users/default.jpg";
             ?>
             <div class="avatar">
               <div class="w-12 rounded-full">
@@ -110,7 +111,7 @@
             <div>
               <span><?php echo $post['first_name'] ?></span> • <?php echo $post['likes'] ?> <i class="fa-regular fa-heart"></i> • <?php echo date("d/m/y", strtotime($post['post_release'])) ?>
             </div>
-            <button class="btn btn-primary"><a href="<?= isset($_SESSION['first_name']) ? "./read_more.php?id=" . $post['id'] : "./login.php" ?>">Read More</a></button>
+            <button class="btn btn-primary"><a href="<?= isset($_SESSION['first_name']) ? asset('pages/read_more.php?id=' . $post['id']) : asset('pages/login.php') ?>">Read More</a></button>
           </div>
         </div>
       </div>
@@ -137,7 +138,7 @@
 
     <!-- buttons that show up when FAB is open -->
     <button class="btn btn-circle btn-lg">
-      <a href="./create_post.php">
+  <a href="<?= asset('pages/create_post.php') ?>">
         <svg
           aria-label="New post"
           xmlns="http://www.w3.org/2000/svg"
@@ -153,14 +154,14 @@
     </button>
 
     <button class="btn btn-circle btn-lg">
-      <a href="./logout.php">
+  <a href="<?= asset('pages/logout.php') ?>">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </a>
     </button>
   </div>
 
   <?php
-  include "../includes/footer.php";
+  include "./includes/footer.php";
   ?>
 </body>
 

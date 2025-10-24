@@ -2,7 +2,7 @@
 require "../includes/connection.php";
 include "../includes/queries.php";
 include "../includes/helpers.php";
-include "../includes/navbar.php"; 
+include "../includes/navbar.php";
 
 // Require login
 if (!isset($_SESSION['first_name'])) {
@@ -16,7 +16,9 @@ $error = "";
 $success = "";
 $hasDislikes = false;
 $colRes = @mysqli_query($conn, "SHOW COLUMNS FROM posts LIKE 'dislikes'");
-if ($colRes && mysqli_num_rows($colRes) > 0) { $hasDislikes = true; }
+if ($colRes && mysqli_num_rows($colRes) > 0) {
+  $hasDislikes = true;
+}
 
 if (isset($_POST['create_post'])) {
   $title = trim($_POST['title'] ?? "");
@@ -66,7 +68,9 @@ if (isset($_POST['create_post'])) {
       'likes' => 0,
       'post_release' => $now,
     ];
-    if ($hasDislikes) { $postData['dislikes'] = 0; }
+    if ($hasDislikes) {
+      $postData['dislikes'] = 0;
+    }
 
     $newId = insertIntoTable($conn, 'posts', $postData);
     if ($newId) {
@@ -91,9 +95,11 @@ if (isset($_POST['create_post'])) {
   <link rel="stylesheet" href="../public/output.css?v=<?php echo filemtime('../public/output.css'); ?>" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    .image-preview { max-height: 320px; }
+    .image-preview {
+      max-height: 320px;
+    }
   </style>
-  </head>
+</head>
 
 <body>
   <section class="container mx-auto max-w-4xl px-4 py-10">
@@ -130,7 +136,7 @@ if (isset($_POST['create_post'])) {
           </div>
 
           <div class="flex items-center justify-end gap-3">
-            <a href="index.php" class="btn btn-ghost">Cancel</a>
+            <a href="../index.php" class="btn btn-ghost">Cancel</a>
             <button type="submit" name="create_post" class="btn btn-primary">Publish</button>
           </div>
         </form>
@@ -148,7 +154,10 @@ if (isset($_POST['create_post'])) {
     if (input) {
       input.addEventListener('change', () => {
         const file = input.files && input.files[0];
-        if (!file) { wrap.classList.add('hidden'); return; }
+        if (!file) {
+          wrap.classList.add('hidden');
+          return;
+        }
         const url = URL.createObjectURL(file);
         preview.src = url;
         wrap.classList.remove('hidden');
